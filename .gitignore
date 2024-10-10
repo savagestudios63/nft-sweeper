@@ -1,0 +1,12 @@
+node_modules/
+bun.lockb
+*.log
+config.yaml
+wallet.json
+sweeper.db
+sweeper.db-*
+.sweeper-paused
+.sweeper-session
+.env
+.env.*
+dist/

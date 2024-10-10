@@ -1,0 +1,90 @@
+# nft-sweeper config
+# Copy to config.yaml and edit.
+
+rpc:
+  # Use a private RPC (Helius / Triton / QuickNode). Public endpoints WILL rate-limit.
+  url: "https://mainnet.helius-rpc.com/?api-key=YOUR_KEY"
+  ws: "wss://mainnet.helius-rpc.com/?api-key=YOUR_KEY"
+  commitment: "confirmed"
+
+wallet:
+  # Path to a keypair JSON (array of 64 bytes). Keep it OUT of the repo.
+  keypairPath: "./wallet.json"
+
+jito:
+  enabled: true
+  blockEngineUrl: "https://mainnet.block-engine.jito.wtf"
+  # Tip range in lamports. Bot adaptively bumps inside this band under contention.
+  tipLamportsMin: 100000       # 0.0001 SOL
+  tipLamportsMax: 5000000      # 0.005 SOL
+  tipAccount: "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5"  # Jito tip account
+
+feeds:
+  magiceden:
+    enabled: true
+    # ME publishes a public WSS for listing events (auth varies by plan).
+    # If WSS unavailable, bot falls back to polling the REST listings endpoint.
+    wsUrl: "wss://api.magiceden.io/v2/ws"
+    pollIntervalMs: 2500
+    apiKey: null
+  tensor:
+    enabled: true
+    # Tensor requires an API key for their GraphQL endpoint.
+    apiUrl: "https://api.tensor.so/graphql"
+    wsUrl: "wss://api.tensor.so/graphql"
+    apiKey: "YOUR_TENSOR_KEY"
+
+risk:
+  sessionBudgetSol: 25.0
+  maxLossPerHourSol: 5.0
+  maxConcurrentBuys: 2
+  minWalletBalanceSol: 0.5        # refuse to buy below this
+  dryRun: false                   # log, do not submit
+
+pricing:
+  # Fair-value estimate = floor * (rarityWeight * (maxRank / rank)) ** rarityCurve
+  rarityCurve: 0.35
+  floorStaleMs: 30000
+  minSpreadPct: 5                 # skip if (fair - ask) / ask < 5%
+
+postBuy:
+  autoRelist: true
+  relistMarketplace: "tensor"
+  relistMarkupPct: 18
+  relistExpirySec: 21600
+
+collections:
+  - name: "Mad Lads"
+    # ME slug AND tensor slug — both optional, but at least one feed must match.
+    magicedenSlug: "mad_lads"
+    tensorSlug: "madlads"
+    # Hard ceiling — never buy above this, even if discount looks huge.
+    maxBuyPriceSol: 95
+    # Or buy only at N% below current floor (whichever is stricter).
+    maxPctBelowFloor: 8
+    maxSessionSpendSol: 15
+    rarity:
+      maxRank: 2500          # only buy pieces ranked top 2500 or better
+      # If unknown rank, treat as this (null = skip).
+      unknownRankDefault: null
+    traits:
+      mustHave:
+        - { name: "Background", value: "Solana" }
+      forbidden:
+        - { name: "Eyes", value: "Closed" }
+
+  - name: "Tensorians"
+    tensorSlug: "tensorians"
+    maxBuyPriceSol: 12
+    maxPctBelowFloor: 12
+    maxSessionSpendSol: 20
+    rarity:
+      maxRank: 4000
+      unknownRankDefault: 9999
+    traits:
+      mustHave: []
+      forbidden: []
+
+logging:
+  level: "info"                   # trace | debug | info | warn | error
+  dbPath: "./sweeper.db"

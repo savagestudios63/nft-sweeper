@@ -1,0 +1,38 @@
+{
+  "name": "nft-sweeper",
+  "version": "0.1.0",
+  "description": "Solana NFT floor sniper for Magic Eden and Tensor",
+  "type": "module",
+  "module": "src/index.ts",
+  "bin": {
+    "sweeper": "./src/cli.ts"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "cli": "bun run src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.95.0",
+    "@solana/spl-token": "^0.4.8",
+    "@coral-xyz/anchor": "^0.30.1",
+    "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
+    "better-sqlite3": "^11.3.0",
+    "bs58": "^6.0.0",
+    "commander": "^12.1.0",
+    "graphql-ws": "^5.16.0",
+    "graphql": "^16.9.0",
+    "jito-ts": "^4.1.1",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "ws": "^8.18.0",
+    "yaml": "^2.5.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/bun": "^1.1.10",
+    "@types/ws": "^8.5.12",
+    "typescript": "^5.6.2"
+  }
+}
